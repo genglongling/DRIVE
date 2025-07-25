@@ -24,3 +24,21 @@ Workflow
     * Visualize the constraints and the generated demonstrations (from the final MDP) by running `python3 -B sim.py --visualize --show_new_demos`.
     * (Optional) Produce GIF by running `python3 -B sim.py --create_gifs --show_new_demos`. This will create `demos.gif`.
 * To run the inD example in the multi-goal setting, run `sim.py` and `main.py` as in the previous step, but with `--multi_goal` flag as well.
+
+Dataset Visualization
+====================
+* The repository includes the [drone-dataset-tools](https://github.com/drone-dataset-tools/drone-dataset-tools) for interactive visualization of the inD dataset.
+* To use the interactive GUI visualization:
+    * Navigate to the drone-dataset-tools directory: `cd drone-dataset-tools-master/src`
+    * Run the fixed visualization script: `python3 run_track_visualization_fixed.py --dataset_dir /path/to/inD-dataset-v1.0/data --dataset ind --recording 00`
+    * The GUI provides:
+        - Interactive frame navigation with slider
+        - Play/pause controls for animation
+        - Vehicle visualization with bounding boxes and IDs
+        - Background image display
+        - Support for all inD dataset recordings (00-32)
+* Alternative visualization options:
+    - Use `--show_trajectory True` to display vehicle trajectories
+    - Use `--annotate_track_id True` to show vehicle IDs
+    - Use `--show_bounding_box True` to display vehicle bounding boxes
+    - Use `--show_orientation True` to show vehicle orientation
