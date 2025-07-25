@@ -54,7 +54,7 @@ This repository implements and compares multiple constraint learning and optimiz
 |----------------|-------------|------------------|-------------------|------------------|----------------|-----------------|
 | **Traditional Planning** | Beam Search | No learning | Hard constraints | Search-based | Guaranteed optimality, interpretable | Computationally expensive, requires known constraints |
 | **Constraint Learning** | MDP-ICL | Single-stage learning | Learned constraints | Inverse learning | Learns unknown constraints from data | Requires demonstration data, assumes MDP structure |
-| **Two-Phase Optimization** | ICL + Convex | Two-stage: Learn → Optimize | Hard learned constraints | Convex optimization | Learns complex constraints, data-driven | Two separate optimizations, higher computational cost |
+| **Two-Phase Optimization (ours)** | ICL + Convex | Two-stage: Learn → Optimize | Learned constraints | Convex optimization | Learns complex constraints, data-driven | Two separate optimizations, higher computational cost |
 | **Constrained RL** | CPO | Single-stage integrated | Soft pre-defined constraints | Trust region optimization | Efficient, handles multiple constraints | Requires known constraint functions |
 | **Preference Learning** | DPO | Single-stage preference-based | Implicit through preferences | Preference optimization | Sample-efficient, no explicit rewards | Requires preference data, less interpretable |
 
@@ -74,7 +74,7 @@ This repository implements and compares multiple constraint learning and optimiz
 - **Use Case**: Learning unknown constraints from expert demonstrations
 - **Computational Complexity**: Linear in demonstration size
 
-### Two-Phase Optimization: ICL + Convex
+### Two-Phase Optimization: ICL + Convex (ours)
 - **Process**: 
   1. **Phase 1**: Learn constraints using ICL
   2. **Phase 2**: Optimize policy with learned constraints
@@ -99,7 +99,7 @@ This repository implements and compares multiple constraint learning and optimiz
 
 ## Performance Comparison Metrics
 
-| Metric | Beam Search | MDP-ICL | ICL + Convex | CPO | DPO |
+| Metric | Beam Search | MDP-ICL | ICL + Convex (ours)| CPO | DPO |
 |--------|-------------|---------|--------------|-----|-----|
 | **Constraint Violation Rate** | Very Low | Low-Medium | Low | Medium | Medium-High |
 | **Computational Efficiency** | Low | High | Medium | High | High |
@@ -122,7 +122,7 @@ This repository implements and compares multiple constraint learning and optimiz
 - Demonstration data is available
 - Single-stage learning is preferred
 
-### Choose ICL + Convex when:
+### Choose ICL + Convex (ours) when:
 - Complex constraint relationships exist
 - Hard constraint satisfaction is required
 - Demonstration data is available
