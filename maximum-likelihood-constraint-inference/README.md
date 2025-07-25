@@ -54,7 +54,7 @@ This repository implements and compares multiple constraint learning and optimiz
 |----------------|-------------|------------------|-------------------|------------------|----------------|-----------------|
 | **Traditional Planning** | Beam Search | No learning | Hard constraints | Search-based | Guaranteed optimality, interpretable | Computationally expensive, requires known constraints |
 | **Constraint Learning** | MDP-ICL | Single-stage learning | Learned constraints | Inverse learning | Learns unknown constraints from data | Requires demonstration data, assumes MDP structure |
-| **Two-Phase Optimization (ours)** | ICL + Convex | Two-stage: Learn → Optimize | Learned constraints | Convex optimization | Learns complex constraints, data-driven | Two separate optimizations, higher computational cost |
+| **Two-Phase Optimization (ours)** | ICL + Convex | Two-stage: Learn → Optimize | Learned constraints | Convex optimization | Learns complex constraints, data-driven | Two separate optimizations, high computational cost for first optimization (training) + low computational cost for second optimization (deployment)|
 | **Constrained RL** | CPO | Single-stage integrated | Soft pre-defined constraints | Trust region optimization | Efficient, handles multiple constraints | Requires known constraint functions |
 | **Preference Learning** | DPO | Single-stage preference-based | Implicit through preferences | Preference optimization | Sample-efficient, no explicit rewards | Requires preference data, less interpretable |
 
