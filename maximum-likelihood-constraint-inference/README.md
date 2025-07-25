@@ -107,6 +107,7 @@ This repository implements and compares multiple constraint learning and optimiz
 | **Interpretability** | Very High | High | High | Medium | Low |
 | **Scalability** | Low | Medium | Medium | High | High |
 | **Real-time Capability** | No | No | No | Yes | Yes |
+| **Generalization** |  |  |  |  |  |
 
 ## Method Selection Guidelines
 
