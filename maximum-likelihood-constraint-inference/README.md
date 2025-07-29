@@ -174,13 +174,13 @@ The integration framework combines:
 
 ### Integrated Methods
 
-| Method | Integration Approach | Key Features | Distance Usage | Velocity Usage | Acceleration Usage | Integration Approach |
+| Method | Integration Approach | Key Features | Distance Usage | Velocity Usage | Acceleration Usage | Implementation Source |
 |--------|-------------------|--------------|----------------|----------------|-------------------|-------------------|
-| **Beam Search** | Use DVnetworks predictions to guide search | Optimal path planning with learned velocity patterns | Position + Closest car | Current + Predicted | Calculated | DVnetworks prediction only |
-| **MDP-ICL** | Learn constraints from DVnetworks-predicted trajectories | Enhanced constraint inference with velocity predictions | Position + Closest car | Current + Predicted | Calculated | DVnetworks prediction only |
-| **CPO** | Use DVnetworks as part of state representation | Constrained policy optimization with velocity awareness | Position + Closest car | Current + Predicted + Policy | Calculated | 70% Policy + 30% DVnetworks |
-| **DPO** | Use DVnetworks for preference-based learning | Direct preference optimization with trajectory context | Position + Closest car | Current + Predicted + Policy | Calculated | 60% Policy + 40% DVnetworks |
-| **DRIVE(ICL + Convex)** | Use DVnetworks in constraint inference phase | Our method with improved trajectory understanding | Position + Closest car | Current + Predicted | Calculated | DVnetworks prediction only |
+| **Beam Search** | Use DVnetworks predictions to guide search | Optimal path planning with learned velocity patterns | Position + Closest car | Current + Predicted | Calculated | `main_beamsearch.py` |
+| **MDP-ICL** | Learn constraints from DVnetworks-predicted trajectories | Enhanced constraint inference with velocity predictions | Position + Closest car | Current + Predicted | Calculated | `main_ICL.py` + `mdp.py` |
+| **ICL + Convex** | Use DVnetworks in constraint inference phase | Our method with improved trajectory understanding | Position + Closest car | Current + Predicted | Calculated | `main_EFLCE.py` |
+| **CPO** | Use DVnetworks as part of state representation | Constrained policy optimization with velocity awareness | Position + Closest car | Current + Predicted + Policy | Calculated | `cpo_dpo_implementations/` |
+| **DPO** | Use DVnetworks for preference-based learning | Direct preference optimization with trajectory context | Position + Closest car | Current + Predicted + Policy | Calculated | `cpo_dpo_implementations/` |
 
 ### DVnetworks Integration
 
@@ -247,35 +247,86 @@ cd DVnetworks
 python directional_velocity_networks.py
 ```
 
-### 2. Run Integrated Comparison
+### 2. Available Versions
 
+The framework provides two versions for different use cases:
+
+#### Full Version (Recommended)
 ```bash
-# Run comprehensive comparison
+# Run comprehensive comparison with actual implementations
 python integrated_methods_comparison.py
-```
 
-This will:
-- Load pre-trained DVnetworks
-- Initialize all methods (Beam Search, MDP-ICL, ICL+Convex, CPO, DPO)
-- Run each method with DVnetworks integration
-- Track all performance metrics
-- Store trajectory data for visualization
-- Generate comparison plots
-
-### 3. Visualize Results
-
-```bash
-# Create comprehensive visualizations
+# Generate rich visualizations with plots
 python visualize_integrated_results.py
 ```
 
+**Features:**
+- Imports actual implementations from existing files
+- Uses real `beam_search()` function from `main_beamsearch.py`
+- Uses `GridMDP` class from `main_ICL.py` and `mdp.py`
+- Uses `TransitionPredictionNN` from `main_EFLCE.py`
+- Uses `CPOLearner` and `DPOLearner` from `cpo_dpo_implementations/`
+- Generates high-quality PNG plots and comprehensive analysis
+- Requires: `numpy`, `pandas`, `matplotlib`, `seaborn`, `torch`, `psutil`
+
+#### Simulated Version (Lightweight)
+```bash
+# Run lightweight comparison for testing
+python integrated_methods_comparison_simulated.py
+
+# Generate text-based summaries
+python visualize_integrated_results_simulated.py
+```
+
+**Features:**
+- Uses only basic Python libraries (no external dependencies)
+- Simulates method behavior for testing and demonstration
+- Generates text summaries and CSV files
+- Fast execution with minimal memory usage
+- Perfect for quick testing and environments with dependency issues
+
+### 3. Run Integrated Comparison
+
+```bash
+# Run comprehensive comparison (Full Version)
+python integrated_methods_comparison.py
+
+# Or run lightweight version (Simulated)
+python integrated_methods_comparison_simulated.py
+```
+
+This will:
+- Load pre-trained DVnetworks (if available)
+- Initialize all methods with actual implementations (Full) or simulations (Simulated)
+- Run each method with DVnetworks integration
+- Track all performance metrics
+- Store trajectory data for visualization
+- Generate comparison plots (Full) or text summaries (Simulated)
+
+### 4. Visualize Results
+
+```bash
+# Create comprehensive visualizations (Full Version)
+python visualize_integrated_results.py
+
+# Or generate text summaries (Simulated Version)
+python visualize_integrated_results_simulated.py
+```
+
 This generates:
+
+**Full Version:**
 - **Trajectory Comparison**: Visual comparison of all methods
 - **Velocity Analysis**: Speed patterns across methods
 - **Acceleration Analysis**: Acceleration patterns
 - **Performance Metrics**: Training/inference time comparison
 - **Method Summary**: Comprehensive comparison charts
 - **Statistics Report**: Detailed numerical analysis
+
+**Simulated Version:**
+- **Text Summary**: Comprehensive text-based analysis
+- **CSV Reports**: Trajectory and performance data in CSV format
+- **Statistics Report**: Detailed numerical analysis in text format
 
 ## 📁 Integration Output Files
 
@@ -295,50 +346,73 @@ This generates:
 
 ## 🔧 Integration Details
 
-### Beam Search Integration
+### Actual Implementation Integration
+
+The Full Version integrates with actual implementations from existing files:
+
+#### Beam Search Integration
 ```python
+# Imports from main_beamsearch.py
+from main_beamsearch import beam_search, TransitionPredictionNN
+
 def run_beam_search_with_dvnetworks(self, initial_state, max_steps=100):
-    # Use DVnetworks to predict next velocity
-    predicted_vx, predicted_vy = self.predict_with_dvnetworks(current_state, closest_car)
+    # Use actual beam_search function
+    a_values = np.array([[predicted_vx, predicted_vy]])
+    next_state = beam_search(current_state, self.beam_search_model, a_values, delta_t=0.04, max_depth=10)
     
-    # Guide beam search with velocity predictions
     # Store comprehensive trajectory data
     # Track performance metrics
 ```
 
-### MDP-ICL Integration
+#### MDP-ICL Integration
 ```python
+# Imports from main_ICL.py and mdp.py
+from main_ICL import GridMDP
+from mdp import MDP, GridMDP as MDPGridMDP
+
 def run_mdp_icl_with_dvnetworks(self, initial_state, max_steps=100):
-    # Train MDP-ICL with DVnetworks-enhanced demonstrations
-    # Use predicted trajectories for constraint learning
-    # Apply learned constraints with velocity awareness
+    # Use actual GridMDP implementation
+    if hasattr(self.methods['mdp_icl'], 'get_action'):
+        next_state = self.methods['mdp_icl'].get_action(current_state)
+    elif hasattr(self.methods['mdp_icl'], 'step'):
+        next_state = self.methods['mdp_icl'].step(current_state)
 ```
 
-### ICL + Convex Integration (Our Method)
+#### ICL + Convex Integration
 ```python
+# Imports from main_EFLCE.py
+from main_EFLCE import TransitionPredictionNN as EFLCETransitionPredictionNN
+
 def run_icl_convex_with_dvnetworks(self, initial_state, max_steps=100):
-    # Phase 1: Learn constraints using ICL with DVnetworks predictions
-    # Phase 2: Convex optimization with learned constraints
-    # Enhanced constraint inference with velocity patterns
+    # Use actual TransitionPredictionNN for convex optimization
+    input_features = np.concatenate([current_state, closest_car_features])
+    prediction = self.methods['icl_convex'](torch.tensor(input_features, dtype=torch.float32))
+    next_state = self.convert_prediction_to_state(current_state, prediction)
 ```
 
-### CPO Integration
+#### CPO/DPO Integration
 ```python
+# Imports from cpo_dpo_implementations/
+from cpo_dpo_implementations.cpo_learner import CPOLearner
+from cpo_dpo_implementations.dpo_learner import DPOLearner
+
 def run_cpo_with_dvnetworks(self, initial_state, max_steps=100):
-    # Train CPO with demonstrations
-    # Use DVnetworks to enhance state representation
-    # Combine CPO actions with velocity predictions
-    # Apply constraint satisfaction
+    # Use actual CPOLearner implementation
+    self.methods['cpo'].train(demonstrations)
+    next_state = self.methods['cpo'].get_action(current_state)
 ```
 
-### DPO Integration
-```python
-def run_dpo_with_dvnetworks(self, initial_state, max_steps=100):
-    # Create preference data from demonstrations
-    # Train DPO with trajectory preferences
-    # Use DVnetworks for preference-based learning
-    # Generate human-aligned trajectories
-```
+### Fallback Behavior
+
+All methods include graceful fallback to simulated behavior if:
+- Import errors occur (missing dependencies)
+- Implementation errors occur (incompatible interfaces)
+- Memory constraints are exceeded
+- Performance issues arise
+
+This ensures the framework remains functional even when actual implementations are unavailable.
+
+
 
 ## 📈 Integration Key Features
 
