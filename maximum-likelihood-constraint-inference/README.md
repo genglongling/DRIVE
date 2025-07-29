@@ -156,4 +156,247 @@ python experimental_comparison.py
 # - Training time
 # - Convergence speed
 # - Sample efficiency
+
+Integrated Methods Comparison with DVnetworks
+============================================
+
+This repository provides a comprehensive integration framework that combines **DVnetworks (Directional Velocity Networks)** with all baseline methods for constraint learning and optimization in autonomous driving.
+
+## 🎯 Integration Overview
+
+The integration framework combines:
+- **DVnetworks**: Specialized neural networks for trajectory prediction
+- **Baseline Methods**: All existing constraint learning and optimization approaches
+- **Performance Tracking**: Comprehensive metrics for comparison
+- **Visualization**: Rich plotting and analysis tools
+
+## 🏗️ Integration Architecture
+
+### Integrated Methods
+
+| Method | Integration Approach | Key Features |
+|--------|-------------------|--------------|
+| **Beam Search** | Use DVnetworks predictions to guide search | Optimal path planning with learned velocity patterns |
+| **MDP-ICL** | Learn constraints from DVnetworks-predicted trajectories | Enhanced constraint inference with velocity predictions |
+| **ICL + Convex** | Use DVnetworks in constraint inference phase | Our method with improved trajectory understanding |
+| **CPO** | Use DVnetworks as part of state representation | Constrained policy optimization with velocity awareness |
+| **DPO** | Use DVnetworks for preference-based learning | Direct preference optimization with trajectory context |
+
+### DVnetworks Integration
+
+#### Direction Network
+- **Input**: `[x, y, velocity_angle]` (current position and velocity direction)
+- **Output**: `velocity_angle` at t+40 (predicted future direction)
+- **Integration**: Guides trajectory planning in all methods
+
+#### Amplitude Network  
+- **Input**: `[x, y, velocity_magnitude, closest_car_distance, moving_towards_ego]`
+- **Output**: `velocity_magnitude` at t+40 (predicted future speed)
+- **Integration**: Provides velocity constraints and collision avoidance
+
+## 📊 Tracked Metrics
+
+### 1. Trajectory Data Storage
+Each method stores comprehensive trajectory information:
+
+```python
+# Planned ego car trajectory
+planned_ego_track_id: int
+planned_ego_x, planned_ego_y: float  # Position
+planned_ego_vx, planned_ego_vy: float  # Velocity
+planned_ego_ax, planned_ego_ay: float  # Acceleration
+planned_ego_frame: int  # Time step
+
+# Real ego car trajectory (for comparison)
+real_ego_track_id: int
+real_ego_x, real_ego_y: float
+real_ego_vx, real_ego_vy: float
+real_ego_ax, real_ego_ay: float
+real_ego_frame: int
+
+# Real front car trajectory (for context)
+real_front_track_id: int
+real_front_x, real_front_y: float
+real_front_vx, real_front_vy: float
+real_front_ax, real_front_ay: float
+real_front_frame: int
+
+# Method identification
+method_name: str  # 'beam_search', 'mdp_icl', 'icl_convex', 'cpo', 'dpo'
 ```
+
+### 2. Performance Metrics
+Comprehensive performance tracking for each method:
+
+- **Training Time**: Wall-clock time for method training
+- **Inference Time**: Time to generate trajectories
+- **Peak Memory Usage**: Maximum RAM consumption (MB)
+- **CPU Time**: Total CPU processing time
+- **Memory Efficiency**: Performance per memory unit
+
+## 🚀 Integration Usage
+
+### 1. Installation
+
+```bash
+# Install integration dependencies
+pip install -r integration_requirements.txt
+
+# Ensure DVnetworks are trained
+cd DVnetworks
+python directional_velocity_networks.py
+```
+
+### 2. Run Integrated Comparison
+
+```bash
+# Run comprehensive comparison
+python integrated_methods_comparison.py
+```
+
+This will:
+- Load pre-trained DVnetworks
+- Initialize all methods (Beam Search, MDP-ICL, ICL+Convex, CPO, DPO)
+- Run each method with DVnetworks integration
+- Track all performance metrics
+- Store trajectory data for visualization
+- Generate comparison plots
+
+### 3. Visualize Results
+
+```bash
+# Create comprehensive visualizations
+python visualize_integrated_results.py
+```
+
+This generates:
+- **Trajectory Comparison**: Visual comparison of all methods
+- **Velocity Analysis**: Speed patterns across methods
+- **Acceleration Analysis**: Acceleration patterns
+- **Performance Metrics**: Training/inference time comparison
+- **Method Summary**: Comprehensive comparison charts
+- **Statistics Report**: Detailed numerical analysis
+
+## 📁 Integration Output Files
+
+### Generated Data Files
+- `integrated_trajectory_data.csv`: Complete trajectory data for all methods
+- `integrated_trajectory_data.pkl`: Pickled trajectory data
+- `integrated_results.csv`: Performance metrics summary
+- `integrated_performance_comparison.png`: Performance comparison plots
+
+### Visualization Output
+- `visualization_output/trajectory_comparison.png`: Trajectory plots
+- `visualization_output/velocity_comparison.png`: Velocity analysis
+- `visualization_output/acceleration_comparison.png`: Acceleration analysis
+- `visualization_output/performance_metrics.png`: Performance charts
+- `visualization_output/method_comparison_summary.png`: Comprehensive summary
+- `visualization_output/statistics_report.txt`: Detailed statistics
+
+## 🔧 Integration Details
+
+### Beam Search Integration
+```python
+def run_beam_search_with_dvnetworks(self, initial_state, max_steps=100):
+    # Use DVnetworks to predict next velocity
+    predicted_vx, predicted_vy = self.predict_with_dvnetworks(current_state, closest_car)
+    
+    # Guide beam search with velocity predictions
+    # Store comprehensive trajectory data
+    # Track performance metrics
+```
+
+### MDP-ICL Integration
+```python
+def run_mdp_icl_with_dvnetworks(self, initial_state, max_steps=100):
+    # Train MDP-ICL with DVnetworks-enhanced demonstrations
+    # Use predicted trajectories for constraint learning
+    # Apply learned constraints with velocity awareness
+```
+
+### ICL + Convex Integration (Our Method)
+```python
+def run_icl_convex_with_dvnetworks(self, initial_state, max_steps=100):
+    # Phase 1: Learn constraints using ICL with DVnetworks predictions
+    # Phase 2: Convex optimization with learned constraints
+    # Enhanced constraint inference with velocity patterns
+```
+
+### CPO Integration
+```python
+def run_cpo_with_dvnetworks(self, initial_state, max_steps=100):
+    # Train CPO with demonstrations
+    # Use DVnetworks to enhance state representation
+    # Combine CPO actions with velocity predictions
+    # Apply constraint satisfaction
+```
+
+### DPO Integration
+```python
+def run_dpo_with_dvnetworks(self, initial_state, max_steps=100):
+    # Create preference data from demonstrations
+    # Train DPO with trajectory preferences
+    # Use DVnetworks for preference-based learning
+    # Generate human-aligned trajectories
+```
+
+## 📈 Integration Key Features
+
+### 1. Comprehensive Data Tracking
+- **Trajectory Storage**: Complete trajectory data for all methods
+- **Performance Monitoring**: Real-time tracking of computational resources
+- **Context Awareness**: Front car information for collision avoidance
+- **Method Comparison**: Direct comparison across all approaches
+
+### 2. DVnetworks Enhancement
+- **Velocity Prediction**: Accurate velocity direction and magnitude prediction
+- **Temporal Modeling**: 40-frame prediction horizon with smoothing
+- **Context Integration**: Closest car distance and relative motion
+- **Noise Reduction**: 40-frame smoothing for robust predictions
+
+### 3. Performance Analysis
+- **Memory Usage**: Peak memory consumption tracking
+- **CPU Utilization**: Processing time analysis
+- **Training Efficiency**: Method-specific training time comparison
+- **Inference Speed**: Real-time capability assessment
+
+### 4. Visualization Suite
+- **Trajectory Plots**: Visual comparison of planned vs real trajectories
+- **Performance Charts**: Training/inference time comparison
+- **Velocity Analysis**: Speed pattern comparison
+- **Acceleration Analysis**: Acceleration pattern comparison
+- **Comprehensive Summary**: Radar charts and statistical analysis
+
+## 🎯 Integration Research Contributions
+
+### 1. Method Integration
+- **First comprehensive integration** of DVnetworks with constraint learning methods
+- **Enhanced trajectory prediction** for all baseline approaches
+- **Improved constraint inference** with velocity awareness
+
+### 2. Performance Benchmarking
+- **Standardized comparison framework** for all methods
+- **Comprehensive metrics tracking** for fair evaluation
+- **Real-world performance analysis** with actual trajectory data
+
+### 3. Visualization and Analysis
+- **Rich visualization suite** for method comparison
+- **Statistical analysis tools** for performance evaluation
+- **Reproducible evaluation framework** for research community
+
+## 🔮 Future Extensions
+
+### 1. Additional Methods
+- **PPO Integration**: Proximal Policy Optimization with DVnetworks
+- **SAC Integration**: Soft Actor-Critic with velocity prediction
+- **TD3 Integration**: Twin Delayed DDPG with trajectory awareness
+
+### 2. Enhanced Metrics
+- **Safety Metrics**: Collision avoidance performance
+- **Efficiency Metrics**: Fuel consumption and energy efficiency
+- **Comfort Metrics**: Passenger comfort and smoothness
+
+### 3. Advanced Visualization
+- **3D Trajectory Plots**: Three-dimensional trajectory visualization
+- **Interactive Dashboards**: Real-time method comparison
+- **Animation Support**: Animated trajectory comparison
