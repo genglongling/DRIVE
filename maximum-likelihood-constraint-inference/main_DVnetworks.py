@@ -25,6 +25,8 @@ import random
 import torch.optim as optim
 import torch.nn as nn
 from scipy.ndimage import gaussian_filter1d
+import hashlib
+import json
 
 # continuous state
 
@@ -68,6 +70,198 @@ def smooth_trajectory_data(states, frames, sigma=1.0, window_size=5):
     smoothed_states[:, 5] = gaussian_filter1d(recalculated_ay, sigma=sigma)
     
     return smoothed_states
+
+
+def save_filtered_transitions(filtered_transitions, csv_file, max_neighbors=5, smoothing_sigma=1.0, 
+                            x_threshold=80, y_threshold=-80, frame_rate=25):
+    """
+    Save filtered transitions to a pickle file with metadata for caching
+    
+    Args:
+        filtered_transitions: List of [features, label] pairs
+        csv_file: Original CSV file path
+        max_neighbors: Number of neighbors used
+        smoothing_sigma: Smoothing parameter used
+        x_threshold, y_threshold: Filtering thresholds
+        frame_rate: Frame rate used
+    """
+    # Create cache directory if it doesn't exist
+    cache_dir = "./pickles"
+    os.makedirs(cache_dir, exist_ok=True)
+    
+    # Create a unique filename based on parameters
+    params = {
+        'csv_file': csv_file,
+        'max_neighbors': max_neighbors,
+        'smoothing_sigma': smoothing_sigma,
+        'x_threshold': x_threshold,
+        'y_threshold': y_threshold,
+        'frame_rate': frame_rate
+    }
+    
+    # Create hash of parameters for unique filename
+    params_str = json.dumps(params, sort_keys=True)
+    params_hash = hashlib.md5(params_str.encode()).hexdigest()[:8]
+    
+    # Create filename
+    csv_basename = os.path.basename(csv_file).replace('.csv', '')
+    filename = f"{csv_basename}_filtered_transitions_{params_hash}.pickle"
+    filepath = os.path.join(cache_dir, filename)
+    
+    # Save data with metadata
+    data_to_save = {
+        'filtered_transitions': filtered_transitions,
+        'metadata': {
+            'params': params,
+            'params_hash': params_hash,
+            'num_transitions': len(filtered_transitions),
+            'num_positive': sum(1 for t in filtered_transitions if t[1] == 1),
+            'num_negative': sum(1 for t in filtered_transitions if t[1] == 0),
+            'created_at': pd.Timestamp.now().isoformat()
+        }
+    }
+    
+    with open(filepath, 'wb') as f:
+        pickle.dump(data_to_save, f)
+    
+    print(f"Saved {len(filtered_transitions)} filtered transitions to {filepath}")
+    print(f"  Positive samples: {data_to_save['metadata']['num_positive']}")
+    print(f"  Negative samples: {data_to_save['metadata']['num_negative']}")
+    
+    return filepath
+
+
+def load_filtered_transitions(csv_file, max_neighbors=5, smoothing_sigma=1.0, 
+                            x_threshold=80, y_threshold=-80, frame_rate=25, force_reprocess=False):
+    """
+    Load filtered transitions from cache or reprocess if needed
+    
+    Args:
+        csv_file: CSV file path
+        max_neighbors: Number of neighbors
+        smoothing_sigma: Smoothing parameter
+        x_threshold, y_threshold: Filtering thresholds
+        frame_rate: Frame rate
+        force_reprocess: Force reprocessing even if cache exists
+    
+    Returns:
+        filtered_transitions: List of [features, label] pairs
+    """
+    # Create cache directory if it doesn't exist
+    cache_dir = "./pickles"
+    os.makedirs(cache_dir, exist_ok=True)
+    
+    # Create parameters for filename
+    params = {
+        'csv_file': csv_file,
+        'max_neighbors': max_neighbors,
+        'smoothing_sigma': smoothing_sigma,
+        'x_threshold': x_threshold,
+        'y_threshold': y_threshold,
+        'frame_rate': frame_rate
+    }
+    
+    # Create hash and filename
+    params_str = json.dumps(params, sort_keys=True)
+    params_hash = hashlib.md5(params_str.encode()).hexdigest()[:8]
+    csv_basename = os.path.basename(csv_file).replace('.csv', '')
+    filename = f"{csv_basename}_filtered_transitions_{params_hash}.pickle"
+    filepath = os.path.join(cache_dir, filename)
+    
+    # Check if cache exists and we're not forcing reprocess
+    if not force_reprocess and os.path.exists(filepath):
+        try:
+            with open(filepath, 'rb') as f:
+                data = pickle.load(f)
+            
+            filtered_transitions = data['filtered_transitions']
+            metadata = data['metadata']
+            
+            print(f"Loaded {len(filtered_transitions)} filtered transitions from cache: {filepath}")
+            print(f"  Parameters: max_neighbors={max_neighbors}, smoothing_sigma={smoothing_sigma}")
+            print(f"  Positive samples: {metadata['num_positive']}")
+            print(f"  Negative samples: {metadata['num_negative']}")
+            print(f"  Created: {metadata['created_at']}")
+            
+            return filtered_transitions
+            
+        except (pickle.PickleError, KeyError, EOFError) as e:
+            print(f"Error loading cache file {filepath}: {e}")
+            print("Will reprocess data...")
+    
+    # If we get here, we need to reprocess
+    print(f"Processing data with parameters: max_neighbors={max_neighbors}, smoothing_sigma={smoothing_sigma}")
+    filtered_transitions = preprocess_and_filter_trajectories_with_collision_avoidance(
+        csv_file, frame_rate, x_threshold, y_threshold, max_neighbors, smoothing_sigma
+    )
+    
+    # Save the processed data
+    save_filtered_transitions(filtered_transitions, csv_file, max_neighbors, smoothing_sigma, 
+                            x_threshold, y_threshold, frame_rate)
+    
+    return filtered_transitions
+
+
+def list_cached_transitions():
+    """
+    List all cached filtered transition files
+    """
+    cache_dir = "./pickles"
+    if not os.path.exists(cache_dir):
+        print("No cache directory found")
+        return
+    
+    cache_files = [f for f in os.listdir(cache_dir) if f.endswith('_filtered_transitions_.pickle')]
+    
+    if not cache_files:
+        print("No cached transition files found")
+        return
+    
+    print(f"Found {len(cache_files)} cached transition files:")
+    for filename in sorted(cache_files):
+        filepath = os.path.join(cache_dir, filename)
+        try:
+            with open(filepath, 'rb') as f:
+                data = pickle.load(f)
+            
+            metadata = data['metadata']
+            params = metadata['params']
+            
+            print(f"\n{filename}:")
+            print(f"  Transitions: {metadata['num_transitions']}")
+            print(f"  Positive: {metadata['num_positive']}, Negative: {metadata['num_negative']}")
+            print(f"  Parameters: max_neighbors={params['max_neighbors']}, smoothing_sigma={params['smoothing_sigma']}")
+            print(f"  Created: {metadata['created_at']}")
+            
+        except Exception as e:
+            print(f"  Error reading {filename}: {e}")
+
+
+def clear_transition_cache():
+    """
+    Clear all cached transition files
+    """
+    cache_dir = "./pickles"
+    if not os.path.exists(cache_dir):
+        print("No cache directory found")
+        return
+    
+    cache_files = [f for f in os.listdir(cache_dir) if f.endswith('_filtered_transitions_.pickle')]
+    
+    if not cache_files:
+        print("No cached transition files found")
+        return
+    
+    for filename in cache_files:
+        filepath = os.path.join(cache_dir, filename)
+        try:
+            os.remove(filepath)
+            print(f"Removed: {filename}")
+        except Exception as e:
+            print(f"Error removing {filename}: {e}")
+    
+    print(f"Cleared {len(cache_files)} cached files")
+
 
 # Preprocess and filter the trajectories from the CSV file
 def preprocess_and_filter_trajectories(csv_file, frame_rate=25, x_threshold=80, y_threshold=-80):
@@ -612,7 +806,7 @@ def create_negative_samples_from_data(df, track_id, current_frame, current_state
 
 # Define the neural network model (TransitionPredictionNN)
 class TransitionPredictionNN(nn.Module):
-    def __init__(self, input_dim=29):  # 20 base features + 9 collision features
+    def __init__(self, input_dim=23):  # 14 base features + 9 collision features
         super(TransitionPredictionNN, self).__init__()
         self.fc = nn.Sequential(
             nn.Linear(input_dim, 128),
@@ -658,7 +852,7 @@ def load_data(filtered_transitions, batch_size=64):
 
 # Train the model
 def train_model(train_loader, epochs=100, lr=0.001):
-    model = TransitionPredictionNN(input_dim=12)  # Adjust input_dim based on your features
+    model = TransitionPredictionNN(input_dim=23)  # 14 base features + 9 collision features
     optimizer = optim.Adam(model.parameters(), lr=lr)
     criterion = nn.BCEWithLogitsLoss()
 
@@ -1004,10 +1198,17 @@ csv_file = "./inD/00_tracks.csv"  # Replace with the actual CSV file
 print("=== Analyzing Smoothing Effect ===")
 analyze_smoothing_effect(csv_file, track_id=0, sigma_values=[0, 0.5, 1.0, 1.5, 2.0])
 
-# Use collision avoidance preprocessing
-filtered_transitions = preprocess_and_filter_trajectories_with_collision_avoidance(csv_file, max_neighbors=5, smoothing_sigma=1.0)
-train_loader, val_loader = load_data(filtered_transitions)
-model, train_losses, val_losses = train_model(train_loader, val_loader, epochs=200, lr=0.001)
+# Load or process filtered transitions with caching
+print("\n=== Loading/Processing Filtered Transitions ===")
+filtered_transitions = load_filtered_transitions(
+    csv_file, 
+    max_neighbors=5, 
+    smoothing_sigma=1.0,
+    force_reprocess=False  # Set to True to force reprocessing
+)
+
+train_loader = load_data(filtered_transitions)
+model, train_losses, val_losses = train_model(train_loader, epochs=200, lr=0.001)
 
 for i in range(1000):
     # CHANGE -> Extract start state for each sample -
@@ -1208,3 +1409,51 @@ def analyze_training_data(filtered_transitions):
     
     # Analyze collision avoidance features
     analyze_collision_avoidance_features(filtered_transitions)
+
+
+# Command-line interface for cache management
+if __name__ == "__main__":
+    import sys
+    
+    # Check for command line arguments
+    if len(sys.argv) > 1:
+        command = sys.argv[1].lower()
+        
+        if command == "list":
+            print("=== Listing Cached Transitions ===")
+            list_cached_transitions()
+            sys.exit(0)
+        elif command == "clear":
+            print("=== Clearing Transition Cache ===")
+            clear_transition_cache()
+            sys.exit(0)
+        elif command == "reprocess":
+            print("=== Forcing Reprocessing ===")
+            force_reprocess = True
+        else:
+            print(f"Unknown command: {command}")
+            print("Available commands: list, clear, reprocess")
+            print("Usage: python main_DVnetworks.py [list|clear|reprocess]")
+            sys.exit(1)
+    else:
+        force_reprocess = False
+    
+    # Set up the environment
+    traj_list = []
+    csv_file = "./inD/00_tracks.csv"  # Replace with the actual CSV file
+    
+    # Analyze smoothing effect first
+    print("=== Analyzing Smoothing Effect ===")
+    analyze_smoothing_effect(csv_file, track_id=0, sigma_values=[0, 0.5, 1.0, 1.5, 2.0])
+    
+    # Load or process filtered transitions with caching
+    print("\n=== Loading/Processing Filtered Transitions ===")
+    filtered_transitions = load_filtered_transitions(
+        csv_file, 
+        max_neighbors=5, 
+        smoothing_sigma=1.0,
+        force_reprocess=force_reprocess
+    )
+    
+    train_loader = load_data(filtered_transitions)
+    model = train_model(train_loader, epochs=200, lr=0.001)
