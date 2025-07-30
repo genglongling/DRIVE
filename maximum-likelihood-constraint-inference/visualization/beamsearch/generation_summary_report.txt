@@ -1,0 +1,27 @@
+
+RL with Constraints - Generation Results Summary
+================================================
+
+Dataset Information:
+- Total trajectories generated: 10
+- Track IDs used: [233, 235, 248, 212, 295, 349, 251, 374, 350, 303]
+
+Performance Metrics:
+- Average reward: -3570.63 ± 6128.89
+- Min reward: -12728.30
+- Max reward: 2654.20
+- Average trajectory length: 51.0 ± 0.0 steps
+
+Constraint Satisfaction:
+- Total steps: 510
+- Velocity violations: 0 (0.00%)
+- Acceleration violations: 0 (0.00%)
+
+Trajectory Analysis:
+- Average final velocity: 10.34 m/s
+- Average final acceleration: 0.00 m/s²
+- Average distance traveled: 206.84 m
+
+Goals Information:
+- Number of goals: 10
+- Goals: [[181.68261, -48.97473], [146.95127, -21.18915], [57.30352, -95.54519], [172.70523, -53.99363], [50.94609, -92.46187], [172.91668, -53.63138], [168.41924, -55.09529], [59.98446, -100.6446], [59.41783, -97.68532], [173.19074, -53.95526]]

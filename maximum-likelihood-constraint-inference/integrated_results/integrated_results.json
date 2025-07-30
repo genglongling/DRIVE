@@ -1,0 +1,32 @@
+{
+  "beam_search": {
+    "training_time": 0.0002579689025878906,
+    "peak_memory_mb": 312.953125,
+    "cpu_time": 6.500000000109196e-05,
+    "memory_efficiency": 2.0769883669029336e-07
+  },
+  "mdp_icl": {
+    "training_time": 0.10387206077575684,
+    "peak_memory_mb": 312.98046875,
+    "cpu_time": 0.00029299999999921056,
+    "memory_efficiency": 9.361606529934963e-07
+  },
+  "icl_convex": {
+    "training_time": 0.2592899799346924,
+    "peak_memory_mb": 312.98046875,
+    "cpu_time": 0.0002809999999993096,
+    "memory_efficiency": 8.978196023591634e-07
+  },
+  "cpo": {
+    "training_time": 0.2052600383758545,
+    "peak_memory_mb": 312.98046875,
+    "cpu_time": 0.00024300000000110344,
+    "memory_efficiency": 7.764062753551724e-07
+  },
+  "dpo": {
+    "training_time": 0.25306010246276855,
+    "peak_memory_mb": 312.98046875,
+    "cpu_time": 0.00021699999999924557,
+    "memory_efficiency": 6.93333998974163e-07
+  }
+}

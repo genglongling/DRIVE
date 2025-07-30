@@ -1,0 +1,50 @@
+================================================================================
+INTEGRATED METHODS COMPARISON - TEXT SUMMARY
+================================================================================
+Generated: 2025-07-28 19:14:30
+
+TRAJECTORY DATA SUMMARY:
+----------------------------------------
+Total trajectory points: 5
+Beam Search: 1 trajectory points
+MDP-ICL: 1 trajectory points
+ICL + Convex: 1 trajectory points
+CPO: 1 trajectory points
+DPO: 1 trajectory points
+
+PERFORMANCE METRICS SUMMARY:
+----------------------------------------
+BEAM SEARCH:
+  Training Time: 0.000s
+  Peak Memory: 313.0MB
+  CPU Time: 0.000s
+  Memory Efficiency: 0.000
+
+MDP-ICL:
+  Training Time: 0.104s
+  Peak Memory: 313.0MB
+  CPU Time: 0.000s
+  Memory Efficiency: 0.000
+
+CPO:
+  Training Time: 0.205s
+  Peak Memory: 313.0MB
+  CPU Time: 0.000s
+  Memory Efficiency: 0.000
+
+DPO:
+  Training Time: 0.253s
+  Peak Memory: 313.0MB
+  CPU Time: 0.000s
+  Memory Efficiency: 0.000
+
+ICL + CONVEX:
+  Training Time: 0.259s
+  Peak Memory: 313.0MB
+  CPU Time: 0.000s
+  Memory Efficiency: 0.000
+
+PERFORMANCE RANKINGS:
+----------------------------------------
+Fastest Training: Beam Search (0.000s)
+Most Memory Efficient: Beam Search (313.0MB)

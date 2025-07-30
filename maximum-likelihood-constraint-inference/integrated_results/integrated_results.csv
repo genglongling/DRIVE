@@ -1,0 +1,6 @@
+method,training_time,peak_memory_mb,cpu_time,memory_efficiency
+beam_search,0.000,312.953,0.000,0.000
+mdp_icl,0.104,312.980,0.000,0.000
+icl_convex,0.259,312.980,0.000,0.000
+cpo,0.205,312.980,0.000,0.000
+dpo,0.253,312.980,0.000,0.000

@@ -1,0 +1,76 @@
+================================================================================
+INTEGRATED METHODS COMPARISON - STATISTICS REPORT
+================================================================================
+Generated: 2025-07-28 19:14:30
+
+TRAJECTORY DATA STATISTICS:
+----------------------------------------
+Total trajectory points: 5
+
+BEAM SEARCH:
+  Trajectory points: 1
+  Average velocity: 0.000
+  Max velocity: 0.000
+  Average acceleration: 0.000
+  Max acceleration: 0.000
+  Average safety distance: 32.704
+  Min safety distance: 32.704
+
+MDP-ICL:
+  Trajectory points: 1
+  Average velocity: 0.253
+  Max velocity: 0.253
+  Average acceleration: 6.323
+  Max acceleration: 6.323
+  Average safety distance: 47.892
+  Min safety distance: 47.892
+
+ICL + CONVEX:
+  Trajectory points: 1
+  Average velocity: 0.299
+  Max velocity: 0.299
+  Average acceleration: 7.478
+  Max acceleration: 7.478
+  Average safety distance: 22.442
+  Min safety distance: 22.442
+
+CPO:
+  Trajectory points: 1
+  Average velocity: 0.801
+  Max velocity: 0.801
+  Average acceleration: 20.022
+  Max acceleration: 20.022
+  Average safety distance: 44.038
+  Min safety distance: 44.038
+
+DPO:
+  Trajectory points: 1
+  Average velocity: 0.322
+  Max velocity: 0.322
+  Average acceleration: 8.050
+  Max acceleration: 8.050
+  Average safety distance: 24.783
+  Min safety distance: 24.783
+
+
+PERFORMANCE METRICS:
+----------------------------------------
+Training Time Statistics:
+  Average: 0.164s
+  Min: 0.000s
+  Max: 0.259s
+  Range: 0.259s
+
+Memory Usage Statistics:
+  Average: 313.0MB
+  Min: 313.0MB
+  Max: 313.0MB
+
+CPU Time Statistics:
+  Average: 0.000s
+  Min: 0.000s
+  Max: 0.000s
+
+PERFORMANCE RANKINGS:
+  Fastest: Beam Search (0.000s)
+  Most Memory Efficient: Beam Search (313.0MB)
