@@ -1,4 +1,4 @@
-# Constraint Learning Convex Optimization for Autonomous Driving Vehicle (EE364B)
+# DRIVE: Dynamic Rule Inference and Verified Evaluation for Constraint-Aware Autonomous Driving
 
 ## Abstract
 By utilizing Exponential Family Likelihood Estimation Constraint Learning (EFLCE), we aim to: (1) learn soft constraints with the varying types of constraints followed by different drivers, (2) perform state estimation to accurately assess the current driving context and (3) evaluate the performance of the learned agent across diverse driving scenarios.
