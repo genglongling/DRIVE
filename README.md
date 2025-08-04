@@ -499,3 +499,14 @@ This framework enables:
 - **Trajectory Planning**: Analysis of planning algorithms
 - **Performance Benchmarking**: Comprehensive evaluation metrics
 - **Real-world Validation**: Testing on actual driving data
+
+## **📜 Citation**  
+
+If you find this repository helpful, please cite the following paper:  
+
+```
+DRIVE: Dynamic Rule Inference and Verified Evaluation for Constraint-Aware Autonomous Driving
+Anonymous Author(s)  
+```
+
+---
