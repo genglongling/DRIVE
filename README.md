@@ -1,15 +1,5 @@
 # DRIVE: Dynamic Rule Inference and Verified Evaluation for Constraint-Aware Autonomous Driving
 
-```
-DRIVE is the first goal-based, mutli-objective, optimization framework for Constraint-Aware Autonomous Driving. DRIVE includes:
-1) multi-objective supports: minimization of time, distance, effort, jerk, and lane change (in future).
-2) constraint inference module:
-   - using self-defined NN.
-3) trajectory generation module:
-   - using ICL + Convex Optimization (CO), Beam Search (BS), Markov Decision Process (MDP), Constrained Policy Optimization, Direct Preference Optimization (in future), PPO (in future).
-
---- DRIVE Authors
-```
 <p align="center">
   ⬇️ <a href="https://github.com/genglongling/DRIVE">Github</a>  
   📃 <a href="https://arxiv.org/abs/2502.18836">Paper</a>  
@@ -18,6 +8,14 @@ DRIVE is the first goal-based, mutli-objective, optimization framework for Const
    🌐 <a href="https://example.com/project">RounD Dataset</a>
 </p>
 
+DRIVE is the first goal-based, mutli-objective, optimization framework for Constraint-Aware Autonomous Driving. DRIVE includes:
+1) multi-objective supports: minimization of time, distance, effort, jerk, and lane change (in future).
+2) constraint inference module:
+   - using self-defined NN.
+3) trajectory generation module:
+   - using ICL + Convex Optimization (CO), Beam Search (BS), Markov Decision Process (MDP), Constrained Policy Optimization, Direct Preference Optimization (in future), PPO (in future).
+
+--- DRIVE Authors
 
 This repository is based on the [MATLAB implementation](https://drive.google.com/drive/folders/1h2J7o4w4J0_dpldTRpFu_jWQR8CkBbXw) provided by the authors of the following paper:
 * [Scobee, Dexter RR, and S. Shankar Sastry. "Maximum Likelihood Constraint Inference for Inverse Reinforcement Learning." International Conference on Learning Representations. 2019.](https://openreview.net/forum?id=BJliakStvH)
