@@ -500,6 +500,97 @@ This framework enables:
 - **Performance Benchmarking**: Comprehensive evaluation metrics
 - **Real-world Validation**: Testing on actual driving data
 
+## **📜 Repository Structure**
+
+```
+EE364B/
+├── README.md                                    # Main project documentation
+├── basic.py                                     # Basic utility functions
+└── maximum-likelihood-constraint-inference/     # Main project directory
+    ├── README.md                               # Project-specific documentation
+    ├── basic.py                                # Basic utility functions
+    
+    # Core RL Implementation Files
+    ├── rl_with_constraints_beamsearch.py       # Beam search RL implementation
+    ├── rl_with_constraints_convex.py           # Convex optimization RL
+    ├── rl_with_constraints_mdp.py              # MDP-based RL
+    ├── rl_with_constraints_cpo.py              # CPO RL implementation
+    ├── rl_with_constraints_dpo.py              # DPO RL implementation
+    
+    # Test and Evaluation Files
+    ├── test_rl_with_constraints_beamsearch.py  # Beam search testing
+    ├── test_rl_with_constraints_convex.py      # Convex optimization testing
+    ├── test_rl_with_constraints_mdp.py         # MDP testing
+    ├── test_rl_with_constraints_cpo.py         # CPO testing
+    ├── test_rl_with_constraints_dpo.py         # DPO testing
+    
+    # Generalization Test Files
+    ├── test_rl_with_constraints_convex_generalization_round.py  # rounD dataset
+    ├── test_rl_with_constraints_convex_generalization_highd.py # highD dataset
+    ├── test_rl_with_constraints_beamsearch_generalization_ind.py # inD beamsearch
+    ├── test_rl_with_constraints_mdp_generalization_ind.py       # inD MDP
+    └── test_rl_with_constraints_cpo_generalization_ind.py       # inD CPO
+    
+    # Constraint Inference Framework
+    ├── constraint_model_utils.py               # Constraint model utilities
+    ├── constraint_filtered_training.py         # Constraint-filtered RL training
+    
+    # Analysis and Visualization
+    ├── trajectory_quality_analysis.py          # Trajectory quality metrics
+    ├── constraint_quality_analysis.py          # Constraint violation analysis
+    ├── comprehensive_analysis_report.py        # Comprehensive analysis
+    ├── visualize_rl_with_constraints.py       # Main visualization script
+    └── comprehensive_method_analysis_generalization.py # Generalization analysis
+    
+    # Documentation and Tables
+    ├── hyperparameter_tables.tex              # Hyperparameter documentation
+    ├── constraint_violations_convex_round_highd.tex # Generalization results
+    └── scalability_complexity_analysis.md     # Complexity analysis
+    
+    # Dataset Directories
+    ├── dataset/
+    │   ├── inD/                               # inD dataset files
+    │   ├── rounD/                             # rounD dataset files
+    │   └── highD/                             # highD dataset files
+    
+    # Output Directories
+    ├── trajectory_data/                        # Generated trajectory data
+    ├── metrics/                                # Performance metrics
+    ├── visualization/                          # Generated visualizations
+    ├── visualization_output/                   # Analysis outputs
+    ├── integrated_results/                     # Integrated analysis results
+    ├── model_checkpoint/                       # Trained model checkpoints
+    ├── pickles/                               # Pickled data files
+    └── figures/                               # Generated figures
+    
+    # Environment and Dependencies
+    ├── rl_convex_env/                         # Python virtual environment
+    └── requirements.txt                       # Python dependencies
+```
+
+### Key Directories Explained
+
+#### **Core Implementation (`/`)**
+- **RL Method Files**: Individual implementations for each RL approach
+- **Test Files**: Comprehensive testing and evaluation scripts
+- **Constraint Framework**: Constraint inference and filtering utilities
+
+#### **Dataset Management (`/dataset/`)**
+- **inD/**: Intersection dataset with traffic scenarios
+- **rounD/**: Roundabout dataset for generalization testing
+- **highD/**: Highway dataset for generalization testing
+
+#### **Output Management**
+- **trajectory_data/**: Generated trajectories and training history
+- **visualization/**: Plots and analysis figures
+- **metrics/**: Performance metrics and statistics
+- **model_checkpoint/**: Trained model files
+
+#### **Analysis and Documentation**
+- **Analysis Scripts**: Quality metrics, constraint analysis, comprehensive reports
+- **Documentation**: LaTeX tables, complexity analysis, hyperparameter documentation
+- **Visualization**: Interactive plots and trajectory comparisons
+
 ## **📜 Citation**  
 
 If you find this repository helpful, please cite the following paper:  
