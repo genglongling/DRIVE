@@ -15,7 +15,6 @@ DRIVE is the first goal-based, mutli-objective, optimization framework for Const
 3) trajectory generation module:
    - using ICL + Convex Optimization (CO), Beam Search (BS), Markov Decision Process (MDP), Constrained Policy Optimization, Direct Preference Optimization (in future), PPO (in future).
 
---- DRIVE Authors
 
 This repository is based on the [MATLAB implementation](https://drive.google.com/drive/folders/1h2J7o4w4J0_dpldTRpFu_jWQR8CkBbXw) provided by the authors of the following paper:
 * [Scobee, Dexter RR, and S. Shankar Sastry. "Maximum Likelihood Constraint Inference for Inverse Reinforcement Learning." International Conference on Learning Representations. 2019.](https://openreview.net/forum?id=BJliakStvH)
